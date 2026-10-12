@@ -1,0 +1,41 @@
+
+name: CI Pipeline
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate repository files
+        run: |
+          test -f index.html
+          test -f style.css
+          test -f script.js
+          test -f .github/workflows/ci.yml
+          echo "Required project files exist."
+
+      - name: Build project
+        run: |
+          mkdir -p dist
+          cp index.html style.css script.js dist/
+          echo "Build completed successfully."
+
+      - name: Verify build
+        run: |
+          test -f dist/index.html
+          test -f dist/style.css
+          test -f dist/script.js
+          echo "Build verification passed."
